@@ -1,15 +1,34 @@
-## Put comments here that give an overall description of what your
-## functions do
+##    The functions practice lexical scoping and cacheing for the purpose of matrix inverse. 
+##
 
-## Write a short comment describing this function
+## makeCacheMatrix creates a matrix,  and retuns it and its inverse
+##                 with methods  get() and getmrx().   the inverse can be re-set with method set(),
+##                  but usually this is not advisable.
 
 makeCacheMatrix <- function(x = matrix()) {
-
+        m <- NULL
+        set <- function(y) {
+                x <<- y
+                m <<- NULL
+        }
+        get <- function() x
+        setmrx <- function(solve) m <<- solve
+	  getmrx <- function() m
+        list(set = set, get = get,
+             setmrx = setmrx,
+             getmrx = getmrx)
 }
-
-
-## Write a short comment describing this function
+# cacheSolve returns the inverse of matrix x,  from  cache if existing, otherwise calculates it
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+        m <- x$getmrx()
+        if(!is.null(m)) {
+                message("getting cached data")
+                return(m)
+        }
+        mrx <- x$get()
+        m <- solve(mrx, ...)
+        x$setmrx(m)
+        m
 }
+
